@@ -66,6 +66,7 @@ if __name__ == '__main__':
     M1=MonteCarlo(N)
     M2=MonteCarlo(N)
     M_equ=(M1+M2)/2
+    M_equal=np.append(M_equal,M_equ)
     n=1
     print("初次迭代结果为：",M_equ)
     if abs(M1-M2)<cal_e:
