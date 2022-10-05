@@ -8,5 +8,5 @@ import math
 cal_e=1e-5  #设定精度
 cal_n=40    #初次迭代点数
 
-def f(x):
-    return math.sin(x)
+def f(x):   #被积函数
+    return x**2+np.cos(x)   
