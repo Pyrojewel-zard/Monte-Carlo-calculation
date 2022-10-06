@@ -68,4 +68,4 @@ int main(){
     printf("高斯法积分结果为：%lf", gauss2(0, 1, 5));
     return 0;
 }
-//g++ -o libpycallcpp.dll -shared -fPIC functions.cpp
+//g++ -o libpycallcpp.dll -shared -fPIC functions.cpp 生成动态链接库
