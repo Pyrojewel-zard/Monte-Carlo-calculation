@@ -1,6 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+# 梯形法
+def trapezoid_partition(f, a, b, n, m):
+    h = (b - a) / m
+    s = 0
+    for i in range(m):
+        s += trapezoid(f, a + i * h, a + (i + 1) * h, n)
+    return s
 
 ## 梯形法
 def trapezoid(f, a, b, n):
@@ -23,8 +30,8 @@ def simpson(f, a, b, n):
 ## 高斯积分
 def gauss(f, a, b, n):
     if n == 1:
-        x = 0
-        w = 2
+        x = [0]
+        w = [2]
     elif n == 2:
         x = [-1 / np.sqrt(3), 1 / np.sqrt(3)]
         w = [1, 1]
@@ -34,6 +41,9 @@ def gauss(f, a, b, n):
     elif n == 4:
         x = [-np.sqrt((3 + 2 * np.sqrt(6 / 5)) / 7), -np.sqrt((3 - 2 * np.sqrt(6 / 5)) / 7), np.sqrt((3 - 2 * np.sqrt(6 / 5)) / 7), np.sqrt((3 + 2 * np.sqrt(6 / 5)) / 7)]
         w = [(18 - np.sqrt(30)) / 36, (18 + np.sqrt(30)) / 36, (18 + np.sqrt(30)) / 36, (18 - np.sqrt(30)) / 36]
+    elif n == 5:
+        x = [-np.sqrt(5 + 2 * np.sqrt(10 / 7)) / 3, -np.sqrt(5 - 2 * np.sqrt(10 / 7)) / 3, 0, np.sqrt(5 - 2 * np.sqrt(10 / 7)) / 3, np.sqrt(5 + 2 * np.sqrt(10 / 7)) / 3]
+        w = [(322 - 13 * np.sqrt(70)) / 900, (322 + 13 * np.sqrt(70)) / 900, 128 / 225, (322 + 13 * np.sqrt(70)) / 900, (322 - 13 * np.sqrt(70)) / 900]
     s = 0
     for i in range(n):
         s += w[i] * f((b + a) / 2 + (b - a) / 2 * x[i])
@@ -77,36 +87,66 @@ if __name__ == "__main__":
     def fun(x):
         return 1/(1+x**2)
 
+    tol=1e-6
+    
+
+### 梯形法具体迭代过程
+    n1=10
+    res1=trapezoidal(fun,0,1,n1,0)
+    while np.abs(res1.accumulate() - np.arctan(1))>tol:
+        n1+=1
+        res1=trapezoidal(fun,0,1,n1,0)
+    print("梯形法计算结果：", res1.accumulate())
+    print("梯形法计算节点",n1)
     time1=time.perf_counter()
-    s1=trapezoidal(fun,0,1,100,0)
+    s1=trapezoidal(fun,0,1,n1,0)
     res = s1.accumulate()
     time2=time.perf_counter()
     print("梯形法计算用时",time2-time1)
-    print("梯形法结果：", res)
     print("梯形法误差", np.abs(res - np.arctan(1)))
 
+
+### 辛普森法具体迭代过程
+    n2=1
+    res2=simpson_(fun,0,1,n2,0)
+    while np.abs(res2.accumulate() - np.arctan(1))>tol:
+        n2+=1
+        res2=simpson_(fun,0,1,n2,0)
+    print("辛普森法计算结果：", res2.accumulate())
+    print("辛普森法计算节点",n2)
     time3=time.perf_counter()
-    s2=simpson_(fun,0,1,100,0)
+    s2=simpson_(fun,0,1,n2,0)
     res = s2.accumulate()
     time4=time.perf_counter()
     print("辛普森法计算用时",time4-time3)
-    print("辛普森法结果：", res)
     print("辛普森法误差", np.abs(res - np.arctan(1)))
 
+
+    n3=1
+    res3=gauss_(fun,0,1,n3,0)
+    while np.abs(res3.accumulate() - np.arctan(1))>tol:
+        n3+=1
+        res3=gauss_(fun,0,1,n3,0)
+    print("高斯积分计算结果：", res3.accumulate())
+    print("高斯积分计算节点",n3)
     time5=time.perf_counter()
-    s3=gauss_(fun,0,1,4,0)
+    s3=gauss_(fun,0,1,n3,0)
     res = s3.accumulate()
     time6=time.perf_counter()
     print("高斯积分计算用时",time6-time5)
-    print("高斯积分计算结果：", res)
-    print("高斯积分结果：", res)
     print("高斯积分误差", np.abs(res - np.arctan(1)))
 
+
+    n4=1
+    res4=gauss_partition_(fun,0,1,n4,20)
+    while np.abs(res4.accumulate() - np.arctan(1))>tol:
+        n4+=1
+        res4=gauss_partition_(fun,0,1,n4,20)
+    print("分区高斯积分计算结果：", res4.accumulate())
+    print("分区高斯积分计算节点",n4)
     time7=time.perf_counter()
-    s4=gauss_partition_(fun,0,1,4,20)
+    s4=gauss_partition_(fun,0,1,n4,20)
     res = s4.accumulate()
     time8=time.perf_counter()
     print("分区高斯积分计算用时",time8-time7)
-    print("分区高斯积分计算结果：", res)
-    print("分区高斯积分结果：", res)
     print("分区高斯积分误差", np.abs(res - np.arctan(1)))

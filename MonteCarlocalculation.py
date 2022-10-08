@@ -87,4 +87,3 @@ if __name__ == '__main__':
     createTable(doc,table)
     add_Data_to_Table(doc,table,M_equal)
     plot_convergence(M_equal)
-
